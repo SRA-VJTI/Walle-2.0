@@ -9,6 +9,7 @@
 	by Society Of Robotics And Automation, VJTI.
 */
 
+//Includes
 #include <MPU.h>
 #include <FILTER.h>
 #include <SRA16.h>
@@ -54,7 +55,7 @@ void setup()
 	/*	Initializes the motors and PWM (PWM1)	*/
 	bot_motion_init(); 
 
-	/*	Belongs to the sra16 module
+	/*	Belongs to the SRA16 module
 		Initializes switches on the SRA-Board	*/
 	switch_init();                                                  
 
@@ -68,6 +69,7 @@ void setup()
 
 void loop()
 {
+  start_mpu();
 	/*  This function belongs to the MPU modulue,
 		it reads raw values of the accelerometer and gyroscope's registers from the MPU	*/	
 	read_raw_values_mpu(&raw_values); 
