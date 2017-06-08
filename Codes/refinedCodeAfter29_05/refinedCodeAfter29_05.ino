@@ -3,8 +3,7 @@
 	Demonstrates the working of Balancing Algorithm. 
 
 	For more information visit http://sra.vjti.info/
-
-	This code is in the public domain.
+  GIT repository https://github.com/SRA-VJTI/Walle-2.0
 
 	modified 29 May, 2017
 	by Society Of Robotics And Automation, VJTI.
@@ -112,7 +111,7 @@ void print_data()
 //	SETTING MOTOR SPEEDS
 void left_motorspeed(int a)
 {
-	set_pwm1a(a); 
+	  set_pwm1a(a); 
 }
 
 void right_motorspeed(int b)
