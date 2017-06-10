@@ -22,7 +22,7 @@
 #include<compat/deprecated.h>
 #include<util/delay.h>
 #include<avr/eeprom.h>
-#include<io16.h>
+#include<IO16.h>
 #include <inttypes.h>
 /* E N D S */
 
@@ -54,8 +54,8 @@ void pwm1_init(void)
 	OCR1AL = 0x00;
 	OCR1BH = 0x00;
 	OCR1BL = 0x00;
-	ICR1H  = 0x02; //for 3khz frequency
-	ICR1L  = 0x9A;
+	ICR1H  = 0x01; //for 3khz frequency
+	ICR1L  = 0x8F;
 	TCCR1A = 0xA2; //prescalar set to 8
 	TCCR1B = 0x1A; //start Timer
 }

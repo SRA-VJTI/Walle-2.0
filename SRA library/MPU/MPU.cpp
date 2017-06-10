@@ -18,18 +18,22 @@ void start_mpu(void)
 
 void read_raw_values_mpu(struct raw_data* raw_val)
 {
+	start_mpu();																	// Starts MPU to make it Failiure proof
 	Wire.beginTransmission(MPU_ADDR);
-	Wire.write(0x3B);  																// Starting with register 0x3B (ACCEL_XOUT_H)
-	Wire.endTransmission(false);													// REPEATED START signal
+	Wire.write(0x3B);																// Starting with register 0x3B (ACCEL_XOUT_H)
+	Wire.endTransmission(false);														// REPEATED START signal
 	Wire.requestFrom(MPU_ADDR,14,true);  											// request a total of 14 registers
 	
-	raw_val->raw_acce_x	=	Wire.read()	<<	8	|	Wire.read();  					// 0x3B (ACCEL_XOUT_H) & 0x3C (ACCEL_XOUT_L)     
-	raw_val->raw_acce_y	=	Wire.read()	<<	8	|	Wire.read();  					// 0x3D (ACCEL_YOUT_H) & 0x3E (ACCEL_YOUT_L)
-	raw_val->raw_acce_z	=	Wire.read()	<<	8	|	Wire.read();  					// 0x3F (ACCEL_ZOUT_H) & 0x40 (ACCEL_ZOUT_L)
-	raw_val->temp		=	Wire.read()	<<	8	|	Wire.read();  					// 0x41 (TEMP_OUT_H) & 0x42 (TEMP_OUT_L)
-	raw_val->raw_gyro_x	=	Wire.read()	<<	8	|	Wire.read();  					// 0x43 (GYRO_XOUT_H) & 0x44 (GYRO_XOUT_L)
-	raw_val->raw_gyro_y	=	Wire.read()	<<	8	|	Wire.read();  					// 0x45 (GYRO_YOUT_H) & 0x46 (GYRO_YOUT_L)
-	raw_val->raw_gyro_z	=	Wire.read()	<<	8	|	Wire.read();  					// 0x47 (GYRO_ZOUT_H) & 0x48 (GYRO_ZOUT_L)
+	if(Wire.available())
+	{
+		raw_val->raw_acce_x	=	Wire.read()	<<	8	|	Wire.read();  				// 0x3B (ACCEL_XOUT_H) & 0x3C (ACCEL_XOUT_L)  
+		raw_val->raw_acce_y	=	Wire.read()	<<	8	|	Wire.read();  				// 0x3D (ACCEL_YOUT_H) & 0x3E (ACCEL_YOUT_L)
+		raw_val->raw_acce_z	=	Wire.read()	<<	8	|	Wire.read();  				// 0x3F (ACCEL_ZOUT_H) & 0x40 (ACCEL_ZOUT_L)
+		raw_val->temp		=	Wire.read()	<<	8	|	Wire.read();  				// 0x41 (TEMP_OUT_H) & 0x42 (TEMP_OUT_L)
+		raw_val->raw_gyro_x	=	Wire.read()	<<	8	|	Wire.read();  				// 0x43 (GYRO_XOUT_H) & 0x44 (GYRO_XOUT_L)
+		raw_val->raw_gyro_y	=	Wire.read()	<<	8	|	Wire.read();  				// 0x45 (GYRO_YOUT_H) & 0x46 (GYRO_YOUT_L)
+		raw_val->raw_gyro_z	=	Wire.read()	<<	8	|	Wire.read();  				// 0x47 (GYRO_ZOUT_H) & 0x48 (GYRO_ZOUT_L)
+	}
 }
 
 void calibrate_mpu(struct initial_data* init_data)

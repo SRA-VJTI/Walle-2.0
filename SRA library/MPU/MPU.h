@@ -38,17 +38,16 @@ struct raw_data {
 struct initial_data {
 	float acce_angle;
 	long  gyro_reading;
-};
-
-/* 	A function to read raw values from the registers of the MPU-6050	
-	Reads raw values from the registers of the MPU	*/
-void read_raw_values_mpu(struct raw_data*);                                    
+};                                  
 
 /* 	A function to begin I2C transmission with MPU-6050
 	Wakes up the MPU by clearing the PWR_MGMT_1 register*/
-void start_mpu(void);                                 
+void start_mpu(void);      
 
-/*TODO: Follow doxygen*/
+/* 	A function to read raw values from the registers of the MPU-6050	
+	Reads raw values from the registers of the MPU	*/
+void read_raw_values_mpu(struct raw_data*);                             
+
 /* 	A function to get initial raw values from both the gyroscope and accelerometer
 	Gets initial raw reading from gyroscope and initial angle calculated by accelerometer	*/
 void calibrate_mpu(struct initial_data*);    

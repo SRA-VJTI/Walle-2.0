@@ -28,6 +28,7 @@ extern "C" {
 
 #include <MPU.h>
 
+/*	Filter Types	*/
 enum filter_type {
     NONE          = 1,  						//	NONE filter directly reads from MPU-6050
     COMPLEMENTARY = 2,  						//	Applies Complementary filter to the raw readings

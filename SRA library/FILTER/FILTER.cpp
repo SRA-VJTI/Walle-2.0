@@ -3,6 +3,7 @@
 
 #include <Filter.h>
 #include <Arduino.h>
+#include <avr/eeprom.h>
 
 //	A function to calcuulate the angular velocity about the required axis using Gyroscope Data
 float calc_angular_velocity(struct raw_data raw_values, struct initial_data init_data)
@@ -50,10 +51,14 @@ void calc_angle(float* angle, struct raw_data raw_values, struct initial_data in
 	else if(filter_chosen == COMPLEMENTARY)	{
 		float angular_velocity	= calc_angular_velocity(raw_values, init_data);
 		float acce_angle		= calc_acce_angle(raw_values, init_data);
-		*angle					= complementary_filter(angular_velocity, acce_angle, *angle, 0.98);
+		*angle					= complementary_filter(angular_velocity, acce_angle, *angle, 0.90);
 	}
 
 	else if(filter_chosen == KALMAN) {
 	//TODO: Add this ? 
 	}
+	
+	if(isnan(*angle))
+		*angle	= int(eeprom_read_word(0));
+	else eeprom_write_word(0, int(*angle));
 }
