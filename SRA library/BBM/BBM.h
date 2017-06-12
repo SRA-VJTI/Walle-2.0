@@ -7,8 +7,6 @@
 
 	For more information visit http://sra.vjti.info/
 
-	This code is in the public domain.
-
 	modified 5 June, 2017
 	by Society Of Robotics And Automation, VJTI.
 */
@@ -28,3 +26,9 @@ void move(dir, short, struct initial_data*);
 /*	This Function makes the bot move in the desired direction, which is passed as the first argument,
 	with a desired speed which is passed as the second argument 	*/
 void move(dir, short, float*);
+
+void move_start(struct initial_data*, struct initial_data*);
+
+void move_end(struct initial_data*, struct initial_data*);
+
+void swap_init_data(struct initial_data*, struct initial_data*);

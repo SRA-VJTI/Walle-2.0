@@ -8,7 +8,9 @@
 	by Society Of Robotics And Automation, VJTI.
   **/
 
-#define no_serial 0
+#define no_serial 1
+
+#define calib_mpu 1
 
 #include <MPU.h>
 #include <FILTER.h>
@@ -20,9 +22,14 @@
 #define KI_CONST 0
 #define KD_CONST 0.01
 
+#define Kp 27
+#define Kd 0.1
+#define Ki 0.8
+
 //Filter Params
 struct raw_data 	raw_values;
 struct initial_data	init_data;
+struct initial_data new_init_data;
 
 float angleY = 0;
 float temp = 0;
@@ -42,7 +49,7 @@ struct pid_controller{
 	long  cumulative_error;
 };
 
-pid_controller balancing_pid_ctrl = {25, 0.8, 0.1, 0, 0, 0, 0, 0};//kp 20-25, kd 0.3 //kp 14, kd 0.08
+pid_controller balancing_pid_ctrl = {Kp, Ki, Kd, 0, 0, 0, 0, 0};//kp 20-25, kd 0.3 //kp 14, kd 0.08
 																
 
 void setup()
@@ -59,20 +66,24 @@ void setup()
 	/*	Belongs to the MPU module
 		Gets the initial values of the angular velocity using the gyroscope and
 		angle using the accelerometer, with respect to which new angles will be calculated	*/
-    
-	//calibrate_mpu(&init_data);         
-
+  //#if calib_mpu
+	  calibrate_mpu(&init_data);         
+  //#endif
+  
 	/*	Initializes the motors and PWM (PWM1)	*/
 	bot_motion_init(); 
 
 	/*	Belongs to the sra16 module
 		Initializes switches on the SRA-Board	*/
-	switch_init();                                                  
+	switch_init();                  
 
 	//  HARD CODED VALUES
-	init_data.acce_angle	= 9;//4.61//4.7//10.5//5.19 // 12.34
-	init_data.gyro_reading	= 110; //179 // 				//137
-
+ 
+  //#//if !calib_mpu
+	//init_data.acce_angle	= 4.21;//4.61//4.7//10.5//5.19 // 12.34
+	//init_data.gyro_reading	= 116; //179 // 				//137
+  //#endif
+  
 	/*	Used for tuning values of kp, and kd using the available Potentiometers	*/
 //	tune_pid_pot(&balancing_pid_ctrl);  
 }
@@ -121,20 +132,22 @@ void loop()
  if(pressed_switch2()) {
    balancing_pid_ctrl.ki += 0.1;
  }*/
- if(millis()>5000&&t<5000){
+ if(pressed_switch2()){
   t=millis();
   temp = init_data.acce_angle;
   //move(FORWARD, 10, &init_data);
-  init_data.acce_angle = 15;
+  init_data.acce_angle += 2;
   PORTC |= 0b00000100;
+  flag = 1;
  }
- if(pressed_switch2()){
-  init_data.acce_angle=temp;
- }
+// if(pressed_switch3()){
+//  init_data.acce_angle -= 2;
+// }
  i = millis()-t;
- if (i=2000){
-  init_data.acce_angle=9;
-  //PORTC -= 4;
+ if (i>1000&&flag==1){
+  init_data.acce_angle -= 2;
+    PORTC |= 0b00001000;
+    flag = 2;
  }
 }
 
@@ -147,15 +160,16 @@ void print_data()
 //    Serial.print(raw_values.raw_gyro_x);Serial.print("\t");
 //    Serial.print(raw_values.raw_gyro_y);Serial.print("\t");
 //    Serial.print(raw_values.raw_gyro_z);Serial.print("\t");
-    //Serial.print(angleY);Serial.print("\t");
-//    Serial.print(error);Serial.print("\t");
+    Serial.print(angleY);Serial.print("\t");
+//    Serial.print(correction);Serial.print("\t");
 	Serial.print(init_data.acce_angle);Serial.print("\t");
 	Serial.print(init_data.gyro_reading);Serial.print("\t");
-    Serial.print(i);Serial.print("\t");
-    Serial.print(balancing_pid_ctrl.correction);
-    Serial.print("\t");
-    Serial.print(angleY);
-    Serial.print("\t");
+//    Serial.print(i);Serial.print("\t");
+//     Serial.print(t);Serial.print("\t");
+//    Serial.print(balancing_pid_ctrl.correction);
+//    Serial.print("\t");
+//    Serial.print(angleY);
+//    Serial.print("\t");
     
 //    Serial.print(balancing_pid_ctrl.diff_in_error);
 //    Serial.print("\t");
