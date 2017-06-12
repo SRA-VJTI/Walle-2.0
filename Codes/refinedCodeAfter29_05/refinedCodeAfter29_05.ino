@@ -8,10 +8,12 @@
 	modified 29 May, 2017
 	by Society Of Robotics And Automation, VJTI.
 */
-#define no_serial 0
+#define no_serial 1
 
 #if no_serial
-#define Serial //Serial
+#define Serial.print //Serial
+#define Serial.println //Serial.println
+#define Serial.begin //Serial.begin
 #endif
 //Includes
 #include <MPU.h>
@@ -46,7 +48,6 @@ void setup()
 {
 	/*	Begin Serial Communication between SRA-Board and CP2102	*/
 	Serial.begin(9600);
-  Serial.println("Start Status");
   
 	/*	Belongs to the MPU module	
 		Wakes up the MPU with particular settings	*/
